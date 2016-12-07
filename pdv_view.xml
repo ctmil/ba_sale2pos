@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_pos_make_payment_pdv" model="ir.ui.view">
+            <field name="name">pos.make.payment.pdv</field>
+            <field name="model">pos.make.payment</field>
+	    <field name="inherit_id" ref="point_of_sale.view_pos_payment"/>
+            <field name="arch" type="xml">
+		<field name="amount" position="after">
+			<field name="total_amount" readonly="1"/>
+			<field name="monto_recargo" readonly="1"/>
+			<field name="cuotas" readonly="1"/>
+		</field>			
+	    </field>
+	</record>
+
+        <record id="view_sale_order_form_pdv" model="ir.ui.view">
+            <field name="name">sale.order.form.pdv</field>
+            <field name="model">sale.order</field>
+	    <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+		<button name="action_view_invoice" position="after">
+			<button name="create_pdv_ticket" type="object" string="Crear Ticket"
+				states="progress,manual"
+				class="oe highlight" />
+		</button>
+		<button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice" position="attributes">
+			<attribute name="invisible">1</attribute>
+		</button>
+		<page string="Other Information" position="after">
+			<page string="Blancoamor">
+				<group string="Tickets">
+					<field name="ticket_id" />
+				</group>
+			</page>
+		</page>
+            </field>
+        </record>
+
+        <record id="view_sale_stock_order_form_pdv" model="ir.ui.view">
+            <field name="name">sale.stock.order.form.pdv</field>
+            <field name="model">sale.order</field>
+	    <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+            <field name="arch" type="xml">
+		 <button name="ship_recreate" position="attributes">
+			<attribute name="invisible">1</attribute>
+		 </button>
+                 <button name="ship_corrected" position="attributes">
+			<attribute name="invisible">1</attribute>
+		 </button>
+		 <button name="action_view_delivery" position="attributes">
+			<attribute name="invisible">1</attribute>
+		 </button>
+            </field>
+        </record>
+
+        <record id="view_pos_order_form" model="ir.ui.view">
+            <field name="name">pos.order.form.pdv</field>
+            <field name="model">pos.order</field>
+	    <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+		<field name="partner_id" position="after">
+				<field name="sale_order_id" />
+		</field>
+            </field>
+        </record>
+
+        <record id="view_account_journal_pos_user_form_ba" model="ir.ui.view">
+            <field name="name">view.account.journal.pos.user.form.ba</field>
+            <field name="model">account.journal</field>
+	    <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"/>
+            <field name="arch" type="xml">
+		<field name="amount_authorized_diff" position="after">
+			<field name="sale_cuotas_id" />
+		</field>
+            </field>
+        </record>
+
+        <record id="pos_deposit_form_view" model="ir.ui.view">
+            <field name="name">pos.deposit.form.view</field>
+            <field name="model">pos.deposit</field>
+            <field name="arch" type="xml">
+                <form string="PDV - Deposito Bancario">
+			<header>
+				<button name="process_pos_deposit" string="Procesar" type="object" 
+					states="draft" />
+				<button name="finish_pos_deposit" string="Finalizar" type="object" 
+					states="process" />
+				<field name="state" widget="statusbar" />
+			</header>
+			<group>
+				<field name="name" attrs="{'readonly':[('state','not in',('draft'))]}"/>
+				<field name="user_id" attrs="{'readonly':[('state','not in',('draft'))]}"/>
+				<field name="date" attrs="{'readonly':[('state','not in',('draft'))]}"/>
+				<field name="monto" attrs="{'readonly':[('state','not in',('draft'))]}"/>
+				<field name="nro_deposito" attrs="{'readonly':[('state','not in',('process'))]}"/>
+			</group>		
+		</form>
+	    </field>
+	</record>
+
+        <record id="pos_deposit_tree_view" model="ir.ui.view">
+            <field name="name">pos.deposit.tree.view</field>
+            <field name="model">pos.deposit</field>
+            <field name="arch" type="xml">
+                <tree string="PDV - Deposito Bancario">
+			<field name="name" />
+			<field name="user_id" />
+			<field name="date" />
+			<field name="monto" />
+			<field name="nro_deposito" />
+			<field name="state" />
+		</tree>
+	    </field>
+	</record>
+
+        <record id="action_ba_pdv_deposit" model="ir.actions.act_window">
+            <field name="name">PDV - Deposito Bancario</field>
+            <field name="res_model">pos.deposit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_ba_pdv_deposit" name="PDV - Deposito Bancario" 
+            parent="point_of_sale.menu_point_config_product" 
+            action="action_ba_pdv_deposit"
+            sequence="150"/>
+
+
+
+    </data>
+</openerp>
