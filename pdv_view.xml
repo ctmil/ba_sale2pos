@@ -2,19 +2,6 @@
 <openerp>
     <data>
 
-        <record id="view_pos_make_payment_pdv" model="ir.ui.view">
-            <field name="name">pos.make.payment.pdv</field>
-            <field name="model">pos.make.payment</field>
-	    <field name="inherit_id" ref="point_of_sale.view_pos_payment"/>
-            <field name="arch" type="xml">
-		<field name="amount" position="after">
-			<field name="total_amount" readonly="1"/>
-			<field name="monto_recargo" readonly="1"/>
-			<field name="cuotas" readonly="1"/>
-		</field>			
-	    </field>
-	</record>
-
         <record id="view_sale_order_form_pdv" model="ir.ui.view">
             <field name="name">sale.order.form.pdv</field>
             <field name="model">sale.order</field>
@@ -62,17 +49,6 @@
             <field name="arch" type="xml">
 		<field name="partner_id" position="after">
 				<field name="sale_order_id" />
-		</field>
-            </field>
-        </record>
-
-        <record id="view_account_journal_pos_user_form_ba" model="ir.ui.view">
-            <field name="name">view.account.journal.pos.user.form.ba</field>
-            <field name="model">account.journal</field>
-	    <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"/>
-            <field name="arch" type="xml">
-		<field name="amount_authorized_diff" position="after">
-			<field name="sale_cuotas_id" />
 		</field>
             </field>
         </record>
