@@ -39,7 +39,7 @@ class pos_order(models.Model):
 				raise osv.except_osv(_('Error!'), _('Falta definir el journal para las devoluciones'))
 			clone_id = self.copy(cr, uid, order.id, {
 				'name': order.name + ' REFUND', # not used, name forced by create
-				'journal_id': order.session_id.refund_journal_id.id,
+				'journal_id': order.session_id.config_id.refund_journal_id.id,
 				'session_id': current_session_ids[0],
 				'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
 				}, context=context)
