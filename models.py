@@ -35,7 +35,7 @@ class pos_order(models.Model):
 			if not current_session_ids:
 				raise osv.except_osv(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
 			
-			if not order.session_id.refund_journal_id:
+			if not order.session_id.config_id.refund_journal_id:
 				raise osv.except_osv(_('Error!'), _('Falta definir el journal para las devoluciones'))
 			clone_id = self.copy(cr, uid, order.id, {
 				'name': order.name + ' REFUND', # not used, name forced by create
