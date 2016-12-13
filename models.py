@@ -16,7 +16,53 @@ _logger = logging.getLogger(__name__)
 class pos_order(models.Model):
 	_inherit = 'pos.order'
 
+	refund_journal_id = fields.Many2one('account.journal',string='Diario NC',domain=[('type','=','sale_refund')]
+
+class pos_order(models.Model):
+	_inherit = 'pos.order'
+
 	sale_order_id = fields.Many2one('sale.order')
+
+	def refund(self, cr, uid, ids, context=None):
+        	"""Create a copy of order  for refund order"""
+	        clone_list = []
+        	line_obj = self.pool.get('pos.order.line')
+
+		for order in self.browse(cr, uid, ids, context=context):
+			current_session_ids = self.pool.get('pos.session').search(cr, uid, [
+		                ('state', '!=', 'closed'),
+                		('user_id', '=', uid)], context=context)
+			if not current_session_ids:
+				raise osv.except_osv(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
+
+			import pdb;pdb.set_trace()
+			clone_id = self.copy(cr, uid, order.id, {
+				'name': order.name + ' REFUND', # not used, name forced by create
+				'session_id': current_session_ids[0],
+				'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
+				}, context=context)
+			clone_list.append(clone_id)
+
+		for clone in self.browse(cr, uid, clone_list, context=context):
+			for order_line in clone.lines:
+				line_obj.write(cr, uid, [order_line.id], {
+					'qty': -order_line.qty
+					}, context=context)
+
+	        abs = {
+	            'name': _('Return Products'),
+        	    'view_type': 'form',
+	            'view_mode': 'form',
+        	    'res_model': 'pos.order',
+	            'res_id':clone_list[0],
+        	    'view_id': False,
+	            'context':context,
+        	    'type': 'ir.actions.act_window',
+	            'nodestroy': True,
+        	    'target': 'current',
+	        }
+        	return abs
+
 
 
 class sale_order(models.Model):
