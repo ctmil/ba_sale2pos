@@ -5,6 +5,7 @@ from StringIO import StringIO
 import urllib2, httplib, urlparse, gzip, requests, json
 import openerp.addons.decimal_precision as dp
 import logging
+import time
 import datetime
 from openerp.fields import Date as newdate
 from datetime import datetime
