@@ -13,8 +13,8 @@ from datetime import datetime
 _logger = logging.getLogger(__name__)
 
 
-class pos_order(models.Model):
-	_inherit = 'pos.order'
+class pos_config(models.Model):
+	_inherit = 'pos.config'
 
 	refund_journal_id = fields.Many2one('account.journal',string='Diario NC',domain=[('type','=','sale_refund')]
 
