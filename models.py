@@ -29,6 +29,7 @@ class pos_order(models.Model):
 	        clone_list = []
         	line_obj = self.pool.get('pos.order.line')
 
+		refund_journal = None
 		for order in self.browse(cr, uid, ids, context=context):
 			current_session_ids = self.pool.get('pos.session').search(cr, uid, [
 		                ('state', '!=', 'closed'),
@@ -44,9 +45,11 @@ class pos_order(models.Model):
 				'session_id': current_session_ids[0],
 				'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
 				}, context=context)
+			refund_journal = order.session_id.config_id.refund_journal_id.id
 			clone_list.append(clone_id)
 
 		for clone in self.browse(cr, uid, clone_list, context=context):
+			self.pool.get('pos.order').write(cr,uid,clone.id,{'sale_journal': refund_journal})
 			for order_line in clone.lines:
 				line_obj.write(cr, uid, [order_line.id], {
 					'qty': -order_line.qty
@@ -86,6 +89,7 @@ class sale_order(models.Model):
 			'session_id': session_id.id,
 			'name': self.name,
 			'partner_id': self.partner_id.id,
+			'sale_journal': session_id.config_id.sale_journal_id.id,
 			'location_id': session_id.config_id.stock_location_id.id,
 			'user_id': self.user_id.id,
 			'pos_reference': self.client_order_ref,	
