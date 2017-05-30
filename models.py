@@ -89,7 +89,7 @@ class sale_order(models.Model):
 			'session_id': session_id.id,
 			'name': self.name,
 			'partner_id': self.partner_id.id,
-			'sale_journal': session_id.config_id.sale_journal_id.id,
+			'sale_journal': session_id.config_id.journal_id.id,
 			'location_id': session_id.config_id.stock_location_id.id,
 			'user_id': self.user_id.id,
 			'pos_reference': self.client_order_ref,	
